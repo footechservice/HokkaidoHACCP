@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>北海道HACCP評価調書　自己採点</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic Pro','Meiryo','Yu Gothic',sans-serif;background:#f4f6f4;color:#222;font-size:14px;line-height:1.6}
+.app{max-width:900px;margin:0 auto;padding:20px 16px 60px}
+.header{background:#fff;border-radius:8px;padding:20px 24px;margin-bottom:16px;border:1px solid #d0ddd0}
+.header h1{font-size:20px;font-weight:600;color:#1a4a2a;margin-bottom:4px}
+.header p{font-size:12px;color:#666}
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;background:#fff;border-radius:8px;padding:16px 20px;margin-bottom:16px;border:1px solid #d0ddd0}
+.meta-item label{display:block;font-size:11px;color:#555;margin-bottom:4px;font-weight:500}
+.meta-item input{width:100%;padding:7px 10px;border:1px solid #c8d8c8;border-radius:6px;font-size:13px;color:#222;background:#fafffe;transition:border-color .2s}
+.meta-item input:focus{outline:none;border-color:#1D9E75;box-shadow:0 0 0 2px rgba(29,158,117,.15)}
+
+/* サマリー */
+.summary-box{background:#fff;border-radius:8px;padding:16px 20px;margin-bottom:16px;border:1px solid #d0ddd0}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.metric{background:#f0f9f5;border-radius:6px;padding:10px 14px;border:1px solid #b8ddc8}
+.metric-label{font-size:11px;color:#3a7a5a;font-weight:500;margin-bottom:4px}
+.metric-value{font-size:24px;font-weight:700;color:#1a4a2a}
+.progress-bar{height:6px;border-radius:3px;background:#d0e8d8;margin-top:5px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:#1D9E75;transition:width .4s ease}
+.stage-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.stage-badge{display:inline-block;padding:5px 20px;border-radius:6px;font-size:15px;font-weight:700}
+.stage-1{background:#FCEBEB;color:#A32D2D;border:1px solid #f5b8b8}
+.stage-2{background:#FAEEDA;color:#7a4800;border:1px solid #f5cf88}
+.stage-3{background:#FFF3CD;color:#6a4800;border:1px solid #f0d878}
+.stage-4{background:#e8f5d0;color:#2e6010;border:1px solid #a8d870}
+.stage-5{background:#d0f0e0;color:#0a5a3a;border:1px solid #70c8a0}
+.stage-6{background:#a8e8cc;color:#064830;border:1px solid #48b888}
+.stage-7{background:#1D9E75;color:#fff;border:1px solid #0a7050}
+.stage-8{background:#0a6040;color:#fff;border:1px solid #054030}
+.total-block{flex:1;min-width:180px}
+.total-label{font-size:11px;color:#555;margin-bottom:4px}
+.total-pct{font-size:12px;color:#444;margin-top:3px}
+
+/* 総合コメント */
+.overall-comment{background:#fff;border-radius:8px;padding:16px 20px;margin-bottom:16px;border:1px solid #d0ddd0}
+.overall-comment label{display:block;font-size:12px;color:#555;font-weight:500;margin-bottom:6px}
+.overall-comment textarea{width:100%;padding:8px 10px;border:1px solid #c8d8c8;border-radius:6px;font-size:13px;color:#222;background:#fafffe;resize:vertical;min-height:72px;line-height:1.6;transition:border-color .2s}
+.overall-comment textarea:focus{outline:none;border-color:#1D9E75;box-shadow:0 0 0 2px rgba(29,158,117,.15)}
+
+/* セクション */
+.section-card{background:#fff;border-radius:8px;margin-bottom:12px;border:1px solid #d0ddd0;overflow:hidden}
+.section-header{padding:13px 18px;background:#eaf5ee;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;border-bottom:1px solid #d0ddd0}
+.section-header:hover{background:#ddf0e5}
+.section-title{font-size:14px;font-weight:600;color:#1a4a2a}
+.section-toggle{font-size:18px;color:#3a7a5a;transition:transform .2s;line-height:1}
+.section-toggle.open{transform:rotate(180deg)}
+.section-body{padding:0 18px}
+
+/* 項目行 */
+.item-row{border-top:1px solid #ece8e0;padding:10px 0 6px}
+.item-row:first-child{border-top:none}
+.item-top{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.item-label{flex:1;min-width:200px;font-size:13px;color:#222;line-height:1.55;padding-top:2px}
+.req-badge{display:inline-block;font-size:9px;color:#fff;background:#c0392b;border-radius:3px;padding:1px 5px;margin-left:5px;vertical-align:middle;white-space:nowrap;font-weight:600}
+
+/* スコアボタン */
+.score-select{display:flex;gap:5px;align-items:center;flex-shrink:0;padding-top:1px}
+.score-btn{
+  min-width:40px;height:34px;padding:0 8px;
+  border:2px solid #b8c8b8;
+  border-radius:6px;
+  background:#f8faf8;
+  color:#555;
+  font-size:13px;font-weight:600;
+  cursor:pointer;
+  transition:all .18s;
+  line-height:1;
+  white-space:nowrap;
+}
+.score-btn:hover{background:#e0f0e8;border-color:#1D9E75;color:#1a4a2a}
+
+/* 選択済みボタンの色 ---- 明確に色を変える */
+.score-btn.sel-2{background:#1D9E75 !important;border-color:#0a7050 !important;color:#fff !important;box-shadow:0 2px 6px rgba(29,158,117,.4)}
+.score-btn.sel-1{background:#E89A00 !important;border-color:#a06800 !important;color:#fff !important;box-shadow:0 2px 6px rgba(200,140,0,.4)}
+.score-btn.sel-0{background:#E24B4A !important;border-color:#9a1a1a !important;color:#fff !important;box-shadow:0 2px 6px rgba(200,60,60,.35)}
+.score-btn.sel-m1{background:#8B0000 !important;border-color:#5a0000 !important;color:#fff !important;box-shadow:0 2px 6px rgba(139,0,0,.5)}
+.score-btn.sel-na{background:#888 !important;border-color:#555 !important;color:#fff !important}
+.score-btn.two-yes.sel-2{background:#1D9E75 !important;border-color:#0a7050 !important;color:#fff !important}
+.score-btn.two-no.sel-0{background:#E24B4A !important;border-color:#9a1a1a !important;color:#fff !important}
+
+.na-btn{
+  min-width:44px;height:34px;padding:0 8px;
+  border:2px solid #b8b8b8;
+  border-radius:6px;
+  background:#f5f5f5;
+  color:#888;
+  font-size:11px;font-weight:600;
+  cursor:pointer;
+  transition:all .18s;
+}
+.na-btn:hover{background:#e8e8e8;border-color:#666;color:#444}
+.na-btn.sel-na{background:#888 !important;border-color:#555 !important;color:#fff !important}
+
+/* 必須マイナス警告 */
+.req-warning{
+  font-size:11px;color:#8B0000;
+  background:#fff0f0;border:1px solid #f5b8b8;
+  border-radius:4px;padding:3px 8px;
+  margin-top:4px;display:none;
+  width:fit-content;
+}
+
+/* グループラベル */
+.group-label{font-size:12px;font-weight:600;color:#1a5a3a;background:#f0f9f3;padding:6px 8px;border-radius:4px;margin-top:10px;margin-bottom:2px;border-left:3px solid #1D9E75}
+
+/* コメントエリア */
+.comment-area{margin-top:5px}
+.comment-toggle{
+  font-size:11px;color:#888;background:none;border:none;cursor:pointer;
+  padding:2px 0;display:inline-flex;align-items:center;gap:4px;
+  transition:color .15s;
+}
+.comment-toggle:hover{color:#1D9E75}
+.comment-toggle svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2}
+.comment-input{
+  width:100%;margin-top:5px;padding:6px 9px;
+  border:1px solid #c8d8c8;border-radius:6px;
+  font-size:12px;color:#222;background:#fafffe;
+  resize:vertical;min-height:50px;line-height:1.5;
+  display:none;
+  transition:border-color .2s;
+  font-family:inherit;
+}
+.comment-input:focus{outline:none;border-color:#1D9E75;box-shadow:0 0 0 2px rgba(29,158,117,.12)}
+
+/* 注釈 */
+.note-text{font-size:11px;color:#888;padding:8px 0;border-top:1px solid #ece8e0;margin-top:6px}
+
+/* 印刷ボタン */
+.print-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:13px;
+  border:2px solid #1D9E75;border-radius:8px;
+  background:#1D9E75;color:#fff;
+  font-size:15px;font-weight:600;cursor:pointer;
+  transition:all .2s;
+  margin-top:8px;
+}
+.print-btn:hover{background:#0a7050;border-color:#0a7050}
+.print-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <h1>北海道HACCP評価調書　自己採点</h1>
+    <p>製造・加工編　令和3年（2021年）5月改正版</p>
+  </div>
+
+  <div class="meta-grid">
+    <div class="meta-item"><label>評価施設名</label><input type="text" id="facilityName" placeholder="施設名を入力"></div>
+    <div class="meta-item"><label>評価の対象となった食品群</label><input type="text" id="foodGroup" placeholder="食品群を入力"></div>
+    <div class="meta-item"><label>実施年月日</label><input type="date" id="evalDate"></div>
+    <div class="meta-item"><label>評価実施者</label><input type="text" id="evalPerson" placeholder="氏名を入力"></div>
+  </div>
+
+  <div class="summary-box">
+    <div class="summary-grid">
+      <div class="metric"><div class="metric-label">Ⅰ 基本的自主管理</div><div class="metric-value" id="s1pct">－</div><div class="progress-bar"><div class="progress-fill" id="s1bar" style="width:0%"></div></div></div>
+      <div class="metric"><div class="metric-label">ⅡA 施設面</div><div class="metric-value" id="s2apct">－</div><div class="progress-bar"><div class="progress-fill" id="s2abar" style="width:0%"></div></div></div>
+      <div class="metric"><div class="metric-label">ⅡA 管理運営面</div><div class="metric-value" id="s2bpct">－</div><div class="progress-bar"><div class="progress-fill" id="s2bbar" style="width:0%"></div></div></div>
+      <div class="metric"><div class="metric-label">ⅡA 作業手順書</div><div class="metric-value" id="smpct">－</div><div class="progress-bar"><div class="progress-fill" id="smbar" style="width:0%"></div></div></div>
+      <div class="metric"><div class="metric-label">ⅡB HACCPの取組</div><div class="metric-value" id="s3pct">－</div><div class="progress-bar"><div class="progress-fill" id="s3bar" style="width:0%"></div></div></div>
+    </div>
+    <div class="stage-row">
+      <div>
+        <div style="font-size:11px;color:#555;margin-bottom:4px;font-weight:500">総合評価段階</div>
+        <div id="stageDisplay" class="stage-badge stage-1">段階 −</div>
+      </div>
+      <div class="total-block">
+        <div class="total-label">評価点数獲得率（Ⅱ-A合計）</div>
+        <div class="progress-bar"><div class="progress-fill" id="totalBar" style="width:0%"></div></div>
+        <div class="total-pct" id="totalPct">採点するとここに表示されます</div>
+        <div id="stageDetail" style="font-size:11px;color:#666;margin-top:4px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overall-comment">
+    <label>総合コメント・特記事項</label>
+    <textarea id="overallComment" placeholder="全体的な所見・改善に向けた取り組みなどを記入してください"></textarea>
+  </div>
+
+  <div id="sections"></div>
+
+  <button class="print-btn" onclick="doPrint()">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    PDF印刷（印刷ダイアログを開く）
+  </button>
+</div>
+
+<script>
+const SEC1 = { items:[
+  {id:"i1", label:"①経営責任者は、自主的な衛生管理に積極的に取り組む意欲がありますか。", req:false},
+  {id:"i2", label:"②従業員は、衛生管理に関する何らかの講習・研修を受けていますか。", req:true},
+  {id:"i3", label:"③従業員の衛生管理について、毎日チェックを行っていますか。（服飾・健康状態・爪及び手指の傷）", req:true},
+  {id:"i4", label:"④従業員に対して、手洗いや清掃方法、衛生管理について周知するような機会を設けていますか。", req:true},
+  {id:"i5", label:"⑤冷蔵庫及び冷凍庫の温度について、毎日チェックを行っていますか。", req:true},
+  {id:"i6", label:"⑥原材料受入時に衛生的チェックを行っていますか。", req:false},
+  {id:"i7", label:"⑦製品及び半製品について、何らかの衛生的チェックを行っていますか。", req:false},
+  {id:"i8", label:"⑧製造室や機械器具の清掃状態について、チェックを行っていますか。", req:false},
+  {id:"i9", label:"⑨製造管理に関する記録がありますか。", req:true},
+  {id:"i10",label:"⑩何らかの自主検査を実施していますか。", req:false},
+  {id:"i11",label:"⑪施設の中で、衛生管理の改善及び向上について話し合っていますか。", req:false},
+  {id:"i12",label:"⑫製造工程や保守点検等において、異常・事故・苦情対応時に適切に対応できるよう体制や対応方法を定めていますか。", req:false},
+]};
+
+const SEC2A_ITEMS = [
+  {id:"a1",  label:"施設の周囲：出入口が舗装されていますか。", req:false},
+  {id:"a2",  label:"更衣場所は従事者数に応じた十分な広さがあり、作業場への出入りが容易な位置にありますか。", req:true},
+  {id:"a3",  label:"従業員の外衣と作業衣が更衣設備内で交差汚染していませんか。", req:false},
+  {id:"a4",  label:"作業区分（汚染区分・非汚染区分）に応じ区画していますか。", req:true},
+  {id:"a5",  label:"工程中に交差汚染が生じないように設備機器を配置していますか。", req:true},
+  {id:"a6",  label:"より清潔な作業区域に入る場合の汚染持込防止設備がありますか。", req:false},
+  {id:"a7",  label:"フォークリフト・台車等は屋内外で使い分けるよう配置していますか。", req:false},
+  {id:"a8",  label:"床面・内壁・天井は清掃・消毒を容易にできる材料・構造ですか。", req:true},
+  {id:"a9",  label:"十分な換気能力の設備がありますか。", req:true},
+  {id:"a10", label:"作業場内に十分な採光または照度が得られる設備がありますか。", req:true},
+  {id:"a11", label:"照明設備は食品むき出しの製造ライン上で飛散防止措置が取られていますか。", req:false},
+  {id:"a12", label:"出入口及び作業場内に防虫設備を整えていますか。", req:false},
+  {id:"a13", label:"排水溝・下水溝にはねずみの侵入を防ぐ設備がありますか。", req:true},
+  {id:"a14", label:"食品を汚染しない場所に洗浄設備及び給湯設備がありますか。", req:true},
+  {id:"a15", label:"用途（区域）別の清掃用具及び保管庫がありますか。", req:true},
+  {id:"a16", label:"ホースの先端が床に接触しないようフック等の設備を設けていますか。", req:false},
+  {id:"a17", label:"専用の流水受槽式手洗い設備及び洗浄剤・消毒剤を備えていますか。", req:true},
+  {id:"a18", label:"手洗い設備には温湯が供給できますか。", req:false},
+  {id:"a19", label:"手洗い設備は作業区分ごとに従業員数に応じた数を設置していますか。", req:true},
+  {id:"a20", label:"手洗い設備は適切な大きさを有していますか。", req:false},
+  {id:"a21", label:"手洗い設備は自動式・足踏み式・肘押し式など再汚染しない構造ですか。", req:true},
+  {id:"a22", label:"ペンキの剥がれやサビはないですか。", req:false},
+  {id:"a23", label:"食品に直接触れる設備・器具で木製部分が露出していませんか。", req:true},
+  {id:"a24", label:"適切に洗浄・殺菌ができる構造ですか。", req:true},
+  {id:"a25", label:"食品に直接触れる可能性のある機器を衛生的に保管する場所はありますか。", req:false},
+  {id:"a26", label:"容器・器具類は用途に応じて専用に用意されていますか。", req:false},
+  {id:"a27", label:"加熱・冷却・貯蔵設備に温度・圧力等を調整する装置があり、見やすい場所に設置していますか。", req:true},
+  {id:"a28", label:"食品や添加物を計量するための計器類を備えていますか。", req:false},
+  {id:"a29", label:"水道水または飲用に適する水を十分に供給できる設備がありますか。", req:true},
+  {id:"a30", label:"水道水以外の水を使用する場合、消毒・浄水装置を備えていますか。", req:true},
+  {id:"a31", label:"貯水槽を使用する場合は清掃しやすく汚染されない構造ですか。", req:true},
+  {id:"a32", label:"排水は適切に排出・処理していますか。", req:true},
+  {id:"a33", label:"作業台や機械からの水は排水溝に導かれる構造ですか。", req:false},
+  {id:"a34", label:"廃棄物保管設備は十分な容量があり蓋付きの構造ですか。", req:true},
+  {id:"a35", label:"作業場内の廃棄物容器は蓋のないものまたは足踏み式ですか。", req:false},
+  {id:"a36", label:"トイレの出入口が直接作業場内に面していませんか。", req:false},
+  {id:"a37", label:"トイレ内に流水受槽式手洗い設備及び洗浄剤・消毒剤を備えていますか。", req:true},
+  {id:"a38", label:"トイレの出入りで手を汚染することはありませんか。", req:false},
+  {id:"a39", label:"トイレ専用の履物を用意していますか。", req:false},
+];
+
+const SEC2B_GROUPS = [
+  {label:"①施設設備・機械器具の衛生管理", items:[
+    {id:"b1", label:"作業場及び保管設備等は整理整頓され、不要なものは置いていませんか。", req:true},
+    {id:"b2", label:"床・壁・天井・窓・扉等に破損や故障はありませんか。", req:true},
+    {id:"b3", label:"適切に清掃していますか。（カビ・サビ・残渣のこびりつきはありませんか。）", req:true},
+    {id:"b4", label:"清掃用具は適切な場所で衛生的に保管されていますか。", req:true},
+    {id:"b5", label:"ホースの先端が床に接触しないように取り扱っていますか。", req:false},
+    {id:"b6", label:"食品に影響を与える臭気・有害な煙・蒸気等は適切に排気していますか。", req:false},
+    {id:"b7", label:"作業場内に結露が生じていませんか。", req:false},
+    {id:"b8", label:"手洗い設備及び洗浄設備は清潔で常に使用できる状態ですか。", req:true},
+    {id:"b9", label:"トイレは常に清潔にし、定期的に清掃及び消毒していますか。", req:true},
+  ]},
+  {label:"②施設設備・機械器具の保守点検", items:[
+    {id:"b10",label:"設備器具は適切に洗浄・消毒または殺菌・乾燥していますか。", req:true},
+    {id:"b11",label:"機械器具及びその部品は所定の場所に衛生的に保管していますか。", req:true},
+    {id:"b12",label:"温度計・圧力計・はかり・金属探知機等は保守点検及び校正を適正に行っていますか。", req:true},
+    {id:"b13",label:"熱媒体（水・油等）や潤滑油等が食品に混入しないように取り扱っていますか。", req:false},
+    {id:"b14",label:"容器・器具類は用途に応じて使い分けていますか。", req:false},
+  ]},
+  {label:"③従業員の衛生管理", items:[
+    {id:"b15",label:"作業時には衛生的な専用の作業衣・靴を使用していますか。", req:true},
+    {id:"b16",label:"帽子・ヘアネット・手袋・マスクを清潔で専用のものを正しく使用していますか。", req:false},
+    {id:"b17",label:"貴金属、装飾品を身につけていませんか。", req:true},
+    {id:"b18",label:"作業場に私物等不要なものを持ち込んでいませんか。", req:true},
+    {id:"b19",label:"入室時やより清潔度の高い作業を行う前に手洗い・靴の洗浄等を行っていますか。", req:true},
+    {id:"b20",label:"作業中に手が汚れた場合やトイレの後に手洗い及び消毒を行っていますか。", req:true},
+    {id:"b21",label:"作業開始前に体調・化膿巣・手荒れの有無のチェックを行っていますか。", req:true},
+    {id:"b22",label:"定期的な健康診断及び検便を行っていますか。", req:true},
+  ]},
+  {label:"④従業員の教育訓練", items:[
+    {id:"b23",label:"従業員は衛生に関する外部講習会を受講していますか。", req:true},
+    {id:"b24",label:"従業員に対して衛生に関する内部講習会を定期的に実施していますか。", req:true},
+  ]},
+  {label:"⑤そ族昆虫の防除", items:[
+    {id:"b25",label:"定期的にねずみ・昆虫等の有無を確認し、発生時は適切に駆除し記録を保管していますか。", req:true},
+    {id:"b26",label:"窓及び従業員の出入口が開放状態のままになっていませんか。", req:true},
+  ]},
+  {label:"⑥食品等の衛生的な取扱い", items:[
+    {id:"b27",label:"先入れ先出しを徹底していますか。", req:false},
+    {id:"b28",label:"搬出入作業時のドア・シャッターの開閉は速やかに実施していますか。", req:false},
+    {id:"b29",label:"フォークリフト・台車等は屋内外で使い分けしていますか。", req:false},
+    {id:"b30",label:"原材料の検収（品温・外包装の破損有無・異物付着・期限表示等）を行っていますか。", req:false},
+    {id:"b31",label:"原材料と半製品・製品が接触しないよう区分けして保管していますか。", req:false},
+    {id:"b32",label:"温度管理が必要なものは適切な温度で保管していますか。", req:false},
+    {id:"b33",label:"冷蔵庫及び冷凍庫の温度について定期的にチェックし記録していますか。", req:false},
+    {id:"b34",label:"製品や原材料等のロットを識別できるように表示していますか。", req:false},
+    {id:"b35",label:"食品添加物や包装資材は専用の場所に保管していますか。", req:false},
+    {id:"b36",label:"洗浄剤・殺菌剤等の薬剤は専用の場所に保管していますか。", req:false},
+    {id:"b37",label:"使用している全ての化学薬品をリストアップし、小分け容器に薬品名を表示していますか。", req:false},
+    {id:"b38",label:"原材料・半製品の入った容器を床に直接置いていませんか。", req:false},
+    {id:"b39",label:"加熱・加圧・冷却工程は適切に温度や圧力等を記録し管理していますか。", req:false},
+    {id:"b40",label:"容器・器具・洗浄清掃及び従業員の衛生管理等は作業区分に応じた取扱いをしていますか。", req:false},
+    {id:"b41",label:"作業動線が交差して食品が二次汚染されることがありませんか。", req:false},
+    {id:"b42",label:"解凍水・洗浄水・冷却水を直接床に流していませんか。", req:false},
+    {id:"b43",label:"食品や食品の入った容器は床からの跳ね水等により汚染されることはありませんか。", req:false},
+    {id:"b44",label:"軍手等は使用していないか、やむを得ず使用する場合は適切に交換及び殺菌消毒していますか。", req:false},
+    {id:"b45",label:"床に落ちたものや汚染されたものを触った場合は直ちに手指や器具を洗浄していますか。", req:true},
+    {id:"b46",label:"製造工程中、食品衛生上の危険な工程の認識をしていますか。", req:true},
+    {id:"b47",label:"食品を運搬・運送する場合は温度管理・汚染防止措置がとられていますか。", req:true},
+  ]},
+  {label:"⑦排水及び廃棄物の衛生管理", items:[
+    {id:"b48",label:"排水溝は適切に清掃・補修していますか。", req:true},
+    {id:"b49",label:"廃棄物は適切に処理していますか。", req:true},
+    {id:"b50",label:"廃棄物保管容器は定期的に洗浄し汚液及び汚臭が漏れていませんか。", req:true},
+    {id:"b51",label:"廃棄物保管場所は清潔に保ち清掃していますか。", req:false},
+  ]},
+  {label:"⑧使用水の衛生管理", items:[
+    {id:"b52",label:"水道水以外を使用する場合は年1回以上水質検査を実施し結果を保存していますか。", req:true},
+    {id:"b53",label:"塩素殺菌の場合、作業前・中・後に残留塩素濃度を測定し記録していますか。", req:true},
+    {id:"b54",label:"塩素殺菌以外の場合、殺菌装置が正常に作動していることを確認し記録していますか。", req:true},
+    {id:"b55",label:"貯水槽（水道水）を使用する場合は作業前後に残留塩素濃度を測定し記録していますか。", req:false},
+    {id:"b56",label:"貯水槽を使用する場合は定期的に清掃し清潔に保っていますか。", req:true},
+  ]},
+  {label:"⑨苦情返品対応・緊急時対応・回収プログラム", items:[
+    {id:"b57",label:"苦情対応の担当者が決まっていますか。", req:false},
+    {id:"b58",label:"苦情や事故発生時の役割分担が決まっており文書化されていますか。", req:false},
+    {id:"b59",label:"緊急事態発生時の連絡網が決まっており文書化されていますか。", req:false},
+    {id:"b60",label:"回収や保健所への連絡・消費者への注意喚起の手順が決まっており文書化されていますか。", req:true},
+  ]},
+  {label:"⑩自主検査", items:[
+    {id:"b61",label:"製品の自主検査を定期的に実施していますか。", req:false},
+    {id:"b62",label:"原材料・半製品・使用水・施設の微生物検査等を実施していますか。", req:false},
+    {id:"b63",label:"検査結果について確認し、問題があれば対策を検討していますか。", req:false},
+    {id:"b64",label:"自社規格があり逸脱した食品に対する措置を決めていますか。", req:false},
+    {id:"b65",label:"自社に試験検査室がある場合、機器類の保守点検・校正を実施していますか。", req:false},
+  ]},
+];
+
+// Ⅱ(3) 作業手順書・点検記録チェック（各項目：手順書あり=5pt、記録あり=5pt、両方=10pt）
+const SEC_MANUAL_ITEMS = [
+  {id:"m1",  label:"①施設設備の衛生管理"},
+  {id:"m2",  label:"②施設設備の保守点検"},
+  {id:"m3",  label:"①機械器具の衛生管理"},
+  {id:"m4",  label:"②機械器具の保守点検"},
+  {id:"m5",  label:"③従業員の衛生管理"},
+  {id:"m6",  label:"④従業員の教育訓練"},
+  {id:"m7",  label:"⑤そ族昆虫の防除"},
+  {id:"m8",  label:"⑥食品等の衛生的な取扱い"},
+  {id:"m9",  label:"⑦排水及び廃棄物の衛生管理"},
+  {id:"m10", label:"⑧使用水の衛生管理"},
+  {id:"m11", label:"⑨苦情返品対応・緊急時対応・回収プログラム"},
+  {id:"m12", label:"⑩自主検査"},
+];
+// 手順書スコア：各項目に manual(手順書あり=true/false) と record(点検記録あり=true/false) を保持
+const manualScores = {}; // id -> {manual: bool|null, record: bool|null}
+SEC_MANUAL_ITEMS.forEach(it => { manualScores[it.id] = {manual:null, record:null}; });
+
+function setManual(id, key, val) {
+  if (manualScores[id][key] === val) {
+    manualScores[id][key] = null;
+  } else {
+    manualScores[id][key] = val;
+  }
+  refreshManualBtns(id);
+  recalc();
+}
+
+function refreshManualBtns(id) {
+  const s = manualScores[id];
+  ['manual','record'].forEach(key => {
+    ['yes','no'].forEach(v => {
+      const b = document.querySelector(`[data-mid="${id}"][data-key="${key}"][data-val="${v}"]`);
+      if (!b) return;
+      b.classList.remove('sel-2','sel-0');
+      const cur = s[key];
+      if (cur === true  && v === 'yes') b.classList.add('sel-2');
+      if (cur === false && v === 'no')  b.classList.add('sel-0');
+    });
+  });
+}
+
+function calcManual() {
+  let earned = 0, possible = 0;
+  SEC_MANUAL_ITEMS.forEach(it => {
+    const s = manualScores[it.id];
+    if (s.manual !== null) { possible += 5; if (s.manual) earned += 5; }
+    if (s.record !== null) { possible += 5; if (s.record) earned += 5; }
+  });
+  return {earned, possible};
+}
+
+const SEC3_ITEMS = [
+  {id:"c1", label:"①HACCPについて何らかの勉強をしていますか。（普及啓発講習会レベル）", two:true},
+  {id:"c2", label:"②HACCPについての3日間以上の講習会を受講していますか。", two:true},
+  {id:"c3", label:"③HACCPチームを編成していますか。", two:true},
+  {id:"c4", label:"④製品説明書がありますか。（名称、特性、原材料等）"},
+  {id:"c5", label:"⑤施設の図面及び作業動線図がありますか。"},
+  {id:"c6", label:"⑥詳細な製造工程図（フロー）がありますか。"},
+  {id:"c7", label:"⑦製造工程の標準作業手順書を作成していますか。"},
+  {id:"c8", label:"⑧現場の作業が作成した図面・手順書と一致しているかHACCPチームが確認していますか。"},
+  {id:"c9", label:"⑨作成した標準作業手順書等が活用できるか現場従業員に確認していますか。"},
+  {id:"c10",label:"⑩危害分析結果表（危害リスト）がありますか。"},
+  {id:"c11",label:"⑪重要管理点整理表がありますか。"},
+  {id:"c12",label:"⑫危害分析の結果を反映させた形で衛生管理の方法・製造工程図等を整理していますか。"},
+  {id:"c13",label:"⑬記録用紙を作成し上記管理を実施し記録していますか。"},
+  {id:"c14",label:"⑭記録は適切な保存期間を定め保存していますか。"},
+  {id:"c15",label:"⑮HACCPプランの見直し（内部検証）を実施していますか。"},
+];
+
+// 全項目マップ
+const allItemsMap = {};
+[...SEC1.items, ...SEC2A_ITEMS, ...SEC2B_GROUPS.flatMap(g=>g.items), ...SEC3_ITEMS, ...SEC_MANUAL_ITEMS]
+  .forEach(it => allItemsMap[it.id] = it);
+
+const scores  = {};   // id -> 生の選択値(0/1/2)
+const naSet   = new Set();
+const comments= {};
+
+function getEffectiveScore(item) {
+  if (naSet.has(item.id)) return null;
+  const raw = scores[item.id];
+  if (raw === undefined) return null;
+  // 必須項目で0点 → 実効値は -1
+  if (item.req && raw === 0) return -1;
+  return raw;
+}
+
+function setScore(id, raw, isNA) {
+  if (isNA) {
+    naSet.has(id) ? naSet.delete(id) : naSet.add(id);
+    delete scores[id];
+  } else {
+    naSet.delete(id);
+    scores[id] === raw ? delete scores[id] : (scores[id] = raw);
+  }
+  refreshBtns(id);
+  recalc();
+}
+
+function refreshBtns(id) {
+  const item = allItemsMap[id];
+  const na   = naSet.has(id);
+  const raw  = scores[id];
+  const eff  = na ? null : (item.req && raw === 0 ? -1 : raw);
+
+  // 2択ボタン
+  const yBtn = document.querySelector(`[data-id="${id}"][data-val="2"]`);
+  const nBtn = document.querySelector(`[data-id="${id}"][data-val="0"]`);
+  // 3択ボタン
+  [0,1,2].forEach(v => {
+    const b = document.querySelector(`[data-id="${id}"][data-val="${v}"]`);
+    if (!b) return;
+    b.classList.remove('sel-2','sel-1','sel-0','sel-m1','sel-na');
+    if (!na && raw === v) {
+      if (item.req && v === 0) b.classList.add('sel-m1');
+      else b.classList.add(`sel-${v}`);
+    }
+  });
+  // NA ボタン
+  const naBtn = document.querySelector(`[data-id="${id}"].na-btn`);
+  if (naBtn) { naBtn.classList.remove('sel-na'); if(na) naBtn.classList.add('sel-na'); }
+  // 警告表示
+  const warn = document.getElementById('warn_'+id);
+  if (warn) warn.style.display = (!na && item.req && raw === 0) ? 'block' : 'none';
+}
+
+function calcItems(items) {
+  let earned = 0, possible = 0;
+  items.forEach(item => {
+    const eff = getEffectiveScore(item);
+    if (eff === null) return;
+    possible += 2;
+    earned   += eff;
+  });
+  return {earned, possible};
+}
+
+function pctStr(e, p) {
+  if (p === 0) return '－';
+  const v = Math.round(e / p * 100);
+  return v + '%';
+}
+
+function getStageB(earned, items) {
+  // Excel版ロジック：合計点で段階判定
+  // 0〜2=3, 3〜8=4, 9〜15=5, 16〜21=6, 22〜29=7(但し0点項目なし), 30=8
+  if (earned <= 2)  return 3;
+  if (earned <= 8)  return 4;
+  if (earned <= 15) return 5;
+  if (earned <= 21) return 6;
+  if (earned <= 29) {
+    // 0点項目がある場合は6に降格
+    const hasZero = items.some(it => {
+      const v = getEffectiveScore(it);
+      return v !== null && v === 0;
+    });
+    return hasZero ? 6 : 7;
+  }
+  return 8;
+}
+
+function getStageA(pct) {
+  if (pct < 40) return 3;
+  if (pct < 50) return 4;
+  if (pct < 65) return 5;
+  if (pct < 70) return 6;
+  if (pct < 80) return 7;
+  return 8;
+}
+
+function recalc() {
+  const r1  = calcItems(SEC1.items);
+  const r2a = calcItems(SEC2A_ITEMS);
+  const r2b = calcItems(SEC2B_GROUPS.flatMap(g=>g.items));
+  const r3  = calcItems(SEC3_ITEMS);
+  const rm  = calcManual();
+
+  const s1p  = r1.possible  > 0 ? Math.round(r1.earned /r1.possible *100) : 0;
+  const s2ap = r2a.possible > 0 ? Math.round(r2a.earned/r2a.possible*100) : 0;
+  const s2bp = r2b.possible > 0 ? Math.round(r2b.earned/r2b.possible*100) : 0;
+  const s3p  = r3.possible  > 0 ? Math.round(r3.earned /r3.possible *100) : 0;
+  const smp  = rm.possible  > 0 ? Math.round(rm.earned /rm.possible  *100) : 0;
+
+  const set = (id, val, bar, raw) => {
+    document.getElementById(id).textContent = raw.possible > 0 ? val : '－';
+    document.getElementById(bar).style.width = Math.max(0, raw.possible > 0 ? Math.round(raw.earned/raw.possible*100) : 0) + '%';
+  };
+  set('s1pct',  s1p+'%',  's1bar',  r1);
+  set('s2apct', s2ap+'%', 's2abar', r2a);
+  set('s2bpct', s2bp+'%', 's2bbar', r2b);
+  set('s3pct',  s3p+'%',  's3bar',  r3);
+  set('smpct',  smp+'%',  'smbar',  rm);
+
+  // Ⅱ-A合計（施設面＋管理運営面＋手順書）
+  const totalE = r2a.earned + r2b.earned + rm.earned;
+  const totalP = r2a.possible + r2b.possible + rm.possible;
+  const totalPct = totalP > 0 ? Math.round(totalE / totalP * 100) : 0;
+  document.getElementById('totalPct').textContent =
+    totalP > 0 ? `${totalE} / ${totalP} 点（${totalPct}%）` : '採点するとここに表示されます';
+  document.getElementById('totalBar').style.width = Math.max(0, totalPct) + '%';
+
+  // 段階判定
+  // ⅡA段階：(1)+(2)+(3)の合計獲得率で判定
+  const stageA = totalP > 0 ? getStageA(totalPct) : 3;
+  // ⅡB段階：合計点で判定（0点項目チェック付き）
+  const stageB = getStageB(r3.earned, SEC3_ITEMS);
+  // 総合段階：ⅡAとⅡBの低い方
+  const stageAB = Math.min(stageA, stageB);
+
+  let stage = 1;
+  if      (s1p >= 70) stage = Math.max(3, stageAB);
+  else if (s1p >= 50) stage = 2;
+  else                stage = 1;
+
+  const sd = document.getElementById('stageDisplay');
+  sd.textContent = '段階 ' + stage;
+  sd.className = 'stage-badge stage-' + Math.min(stage, 8);
+
+  // 段階内訳の表示
+  const detailEl = document.getElementById('stageDetail');
+  if (detailEl && totalP > 0) {
+    detailEl.textContent = `ⅡA段階:${stageA}　ⅡB段階:${stageB}　→ 低い方を採用`;
+  }
+}
+
+function makeItemRow(item) {
+  const row = document.createElement('div');
+  row.className = 'item-row';
+
+  // 上段：ラベル + ボタン
+  const top = document.createElement('div');
+  top.className = 'item-top';
+
+  const lbl = document.createElement('div');
+  lbl.className = 'item-label';
+  lbl.textContent = item.label;
+  if (item.req) {
+    const badge = document.createElement('span');
+    badge.className = 'req-badge';
+    badge.textContent = '必須';
+    lbl.appendChild(badge);
+  }
+  top.appendChild(lbl);
+
+  const sc = document.createElement('div');
+  sc.className = 'score-select';
+
+  if (item.two) {
+    // ○ / × の2択
+    [{v:2,t:'　○　',cls:'two-yes'},{v:0,t:'　×　',cls:'two-no'}].forEach(({v,t,cls}) => {
+      const b = document.createElement('button');
+      b.className = `score-btn ${cls}`;
+      b.dataset.id = item.id;
+      b.dataset.val = String(v);
+      b.textContent = t;
+      b.onclick = () => setScore(item.id, v, false);
+      sc.appendChild(b);
+    });
+  } else {
+    // 2 / 1 / 0 の3択
+    [{v:2,t:'2点'},{v:1,t:'1点'},{v:0,t:'0点'}].forEach(({v,t}) => {
+      const b = document.createElement('button');
+      b.className = 'score-btn';
+      b.dataset.id  = item.id;
+      b.dataset.val = String(v);
+      b.textContent = t;
+      b.onclick = () => setScore(item.id, v, false);
+      sc.appendChild(b);
+    });
+  }
+
+  // N/A ボタン
+  const na = document.createElement('button');
+  na.className = 'na-btn';
+  na.dataset.id = item.id;
+  na.textContent = 'N/A';
+  na.onclick = () => setScore(item.id, null, true);
+  sc.appendChild(na);
+
+  top.appendChild(sc);
+  row.appendChild(top);
+
+  // 必須マイナス警告
+  if (item.req) {
+    const warn = document.createElement('div');
+    warn.className = 'req-warning';
+    warn.id = 'warn_' + item.id;
+    warn.textContent = '⚠ 必須項目のため 0点ではなく −1点 として計算されます';
+    row.appendChild(warn);
+  }
+
+  // コメントエリア
+  const ca  = document.createElement('div');
+  ca.className = 'comment-area';
+  const tog = document.createElement('button');
+  tog.className = 'comment-toggle';
+  tog.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>コメントを追加';
+  const ta  = document.createElement('textarea');
+  ta.className = 'comment-input';
+  ta.placeholder = 'この項目に関するコメント・改善メモを入力';
+  ta.oninput = () => { comments[item.id] = ta.value; };
+  tog.onclick = () => {
+    const open = ta.style.display === 'block';
+    ta.style.display = open ? 'none' : 'block';
+    tog.innerHTML = open
+      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>コメントを追加'
+      : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>コメントを閉じる';
+    if (!open) ta.focus();
+  };
+  ca.appendChild(tog);
+  ca.appendChild(ta);
+  row.appendChild(ca);
+
+  return row;
+}
+
+function buildSections() {
+  const cont = document.getElementById('sections');
+
+  function makeCard(title, bodyFn) {
+    const card = document.createElement('div'); card.className = 'section-card';
+    const hdr  = document.createElement('div'); hdr.className  = 'section-header';
+    const ttl  = document.createElement('span');ttl.className  = 'section-title'; ttl.textContent = title;
+    const tog  = document.createElement('span');tog.className  = 'section-toggle open'; tog.textContent = '▾';
+    hdr.appendChild(ttl); hdr.appendChild(tog);
+    const body = document.createElement('div'); body.className = 'section-body';
+    bodyFn(body);
+    hdr.onclick = () => {
+      const open = tog.classList.contains('open');
+      tog.classList.toggle('open', !open);
+      body.style.display = open ? 'none' : 'block';
+    };
+    card.appendChild(hdr); card.appendChild(body);
+    cont.appendChild(card);
+  }
+
+  makeCard('Ⅰ 基本的な自主管理の取り組み状況（評価基準点数：24点）', body => {
+    SEC1.items.forEach(item => body.appendChild(makeItemRow(item)));
+    const note = document.createElement('div'); note.className='note-text';
+    note.textContent='※必須項目で0点を選んだ場合は−1点で計算します。N/Aは評価基準点数から除外します。';
+    body.appendChild(note);
+  });
+
+  makeCard('ⅡA 一般衛生管理（施設面）（評価基準点数：78点）', body => {
+    SEC2A_ITEMS.forEach(item => body.appendChild(makeItemRow(item)));
+    const note = document.createElement('div'); note.className='note-text';
+    note.textContent='※必須項目で0点を選んだ場合は−1点で計算します。N/Aは評価基準点数から除外します。';
+    body.appendChild(note);
+  });
+
+  makeCard('ⅡA 一般衛生管理（管理運営面）（評価基準点数：136点）', body => {
+    SEC2B_GROUPS.forEach(g => {
+      const gl = document.createElement('div'); gl.className = 'group-label';
+      gl.textContent = g.label; body.appendChild(gl);
+      g.items.forEach(item => body.appendChild(makeItemRow(item)));
+    });
+    const note = document.createElement('div'); note.className='note-text';
+    note.textContent='※必須項目で0点を選んだ場合は−1点で計算します。N/Aは評価基準点数から除外します。';
+    body.appendChild(note);
+  });
+
+  makeCard('ⅡA(3) 作業手順書・点検記録の実施状況（評価基準点数：最大120点）', body => {
+    // ヘッダ行
+    const hdr = document.createElement('div');
+    hdr.style.cssText='display:grid;grid-template-columns:1fr 120px 120px;gap:8px;padding:8px 0 4px;border-bottom:1px solid #c8d8c8;font-size:11px;font-weight:600;color:#1a5a3a';
+    hdr.innerHTML='<span>項目</span><span style="text-align:center">作業手順書あり</span><span style="text-align:center">点検・記録あり</span>';
+    body.appendChild(hdr);
+
+    SEC_MANUAL_ITEMS.forEach(item => {
+      const row = document.createElement('div');
+      row.style.cssText='display:grid;grid-template-columns:1fr 120px 120px;gap:8px;align-items:center;border-top:1px solid #ece8e0;padding:8px 0';
+
+      const lbl = document.createElement('div');
+      lbl.style.cssText='font-size:13px;color:#222;line-height:1.5';
+      lbl.textContent = item.label;
+      row.appendChild(lbl);
+
+      ['manual','record'].forEach(key => {
+        const cell = document.createElement('div');
+        cell.style.cssText='display:flex;gap:5px;justify-content:center';
+        [{v:'yes',t:'あり',cls:'sel-2'},{v:'no',t:'なし',cls:'sel-0'}].forEach(({v,t}) => {
+          const b = document.createElement('button');
+          b.className='score-btn';
+          b.dataset.mid=item.id; b.dataset.key=key; b.dataset.val=v;
+          b.textContent=t;
+          b.style.minWidth='48px';
+          b.onclick=()=>setManual(item.id, key, v==='yes');
+          cell.appendChild(b);
+        });
+        row.appendChild(cell);
+      });
+
+      // コメントは下段に
+      const cmRow = document.createElement('div');
+      cmRow.style.cssText='grid-column:1/-1;padding:0';
+      const ca = document.createElement('div'); ca.className='comment-area';
+      const tog2 = document.createElement('button'); tog2.className='comment-toggle';
+      tog2.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>コメントを追加';
+      const ta2 = document.createElement('textarea'); ta2.className='comment-input';
+      ta2.placeholder='この項目に関するコメント・改善メモを入力';
+      ta2.oninput=()=>{comments['m_'+item.id]=ta2.value;};
+      tog2.onclick=()=>{
+        const open=ta2.style.display==='block';
+        ta2.style.display=open?'none':'block';
+        tog2.innerHTML=open?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>コメントを追加':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>コメントを閉じる';
+        if(!open) ta2.focus();
+      };
+      ca.appendChild(tog2); ca.appendChild(ta2); cmRow.appendChild(ca);
+      row.appendChild(cmRow);
+      body.appendChild(row);
+    });
+
+    const note = document.createElement('div'); note.className='note-text';
+    note.textContent='※作業手順書あり・点検記録あり それぞれ5点。両方揃えば1項目10点（最大120点）。N/A相当の項目はなし（未回答は除外）。';
+    body.appendChild(note);
+  });
+
+  makeCard('ⅡB HACCPに関する取り組み（評価基準点数：30点）', body => {
+    SEC3_ITEMS.forEach(item => body.appendChild(makeItemRow(item)));
+    const note = document.createElement('div'); note.className='note-text';
+    note.textContent='※①②③は○/×の2択。N/Aは評価基準点数から除外します。';
+    body.appendChild(note);
+  });
+}
+
+function scoreDisp(item) {
+  const na  = naSet.has(item.id);
+  if (na) return 'N/A';
+  const raw = scores[item.id];
+  if (raw === undefined) return '－';
+  const eff = item.req && raw === 0 ? -1 : raw;
+  if (item.two) return raw === 2 ? '○' : '×';
+  return eff === -1 ? '-1（必須）' : String(eff);
+}
+
+function doPrint() {
+  const f  = document.getElementById('facilityName').value || '（未入力）';
+  const pg = document.getElementById('foodGroup').value    || '－';
+  const d  = document.getElementById('evalDate').value     || '－';
+  const ep = document.getElementById('evalPerson').value   || '－';
+  const oc = document.getElementById('overallComment').value || '';
+
+  const stage = document.getElementById('stageDisplay').textContent;
+  const s1    = document.getElementById('s1pct').textContent;
+  const s2a   = document.getElementById('s2apct').textContent;
+  const s2b   = document.getElementById('s2bpct').textContent;
+  const sm    = document.getElementById('smpct').textContent;
+  const s3    = document.getElementById('s3pct').textContent;
+  const total = document.getElementById('totalPct').textContent;
+  const detail= document.getElementById('stageDetail').textContent;
+
+  function rows(items) {
+    return items.map(item => {
+      const disp = scoreDisp(item);
+      const cm   = comments[item.id] || '';
+      const col  = disp==='-1（必須）'?'#8B0000': disp==='2'||disp==='○'?'#0a6040': disp==='1'?'#7a4800':'#444';
+      return `<tr>
+        <td style="padding:4px 6px;font-size:10px;border-bottom:0.5px solid #ddd;line-height:1.5;vertical-align:top">
+          ${item.label}${item.req?'<span style="color:#fff;background:#c0392b;font-size:9px;padding:1px 4px;border-radius:2px;margin-left:3px">必須</span>':''}
+          ${cm?`<div style="font-size:9px;color:#555;margin-top:2px;padding:2px 6px;background:#f5f5f5;border-left:2px solid #bbb">${cm.replace(/</g,'&lt;')}</div>`:''}
+        </td>
+        <td style="text-align:center;padding:4px 8px;font-size:11px;font-weight:700;border-bottom:0.5px solid #ddd;color:${col};vertical-align:top;white-space:nowrap">${disp}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  let s2bRows = '';
+  SEC2B_GROUPS.forEach(g => {
+    s2bRows += `<tr><td colspan="2" style="padding:5px 6px;font-size:10px;font-weight:600;background:#e8f5ee;border-bottom:0.5px solid #bbb;border-left:3px solid #1D9E75">${g.label}</td></tr>`;
+    s2bRows += rows(g.items);
+  });
+
+  const stageNum = parseInt(stage.replace('段階 ',''));
+  const stageBg  = ['','#FCEBEB','#FAEEDA','#FFF3CD','#e8f5d0','#d0f0e0','#a8e8cc','#1D9E75','#0a6040'][Math.min(stageNum,8)] || '#eee';
+  const stageCol = stageNum >= 7 ? '#fff' : '#222';
+
+  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">
+<title>HACCP評価調書 自己採点結果 − ${f}</title>
+<style>
+@page{margin:12mm 15mm}
+body{font-family:'Hiragino Kaku Gothic Pro','Meiryo',sans-serif;font-size:11px;color:#222;margin:0}
+h2{font-size:12px;font-weight:600;margin:14px 0 5px;border-left:3px solid #1D9E75;padding-left:7px}
+table{width:100%;border-collapse:collapse;margin-bottom:10px}
+th{background:#e0f0e8;padding:5px 6px;font-size:10px;font-weight:600;text-align:left;border-bottom:1px solid #8DCAAA}
+.hbox{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;border:1px solid #aaa;border-radius:4px;padding:10px 14px;margin-bottom:10px}
+.hlabel{font-size:9px;color:#666}.hval{font-size:11px;font-weight:600}
+.sbox{background:#f5f5f5;border-radius:4px;padding:8px 12px;margin-bottom:10px;font-size:10px}
+.legend{font-size:9px;color:#666;background:#fffbe6;border:0.5px solid #e0c050;border-radius:3px;padding:3px 8px;margin-bottom:8px}
+</style></head><body>
+<h1 style="font-size:15px;font-weight:700;margin:0 0 3px">北海道HACCP評価調書　自己採点結果</h1>
+<p style="font-size:9px;color:#666;margin:0 0 10px">製造・加工編　令和3年（2021年）5月改正版</p>
+<div class="hbox">
+  <div><div class="hlabel">評価施設名</div><div class="hval">${f}</div></div>
+  <div><div class="hlabel">評価の対象となった食品群</div><div class="hval">${pg}</div></div>
+  <div><div class="hlabel">実施年月日</div><div class="hval">${d}</div></div>
+  <div><div class="hlabel">評価実施者</div><div class="hval">${ep}</div></div>
+</div>
+<h2>総合結果</h2>
+<div class="legend">※必須項目で0点の場合は−1点として計算。N/Aは評価基準点数から除外。</div>
+<table><tbody>
+  <tr><td style="padding:5px 8px;width:45%;border-bottom:0.5px solid #ddd">総合評価段階</td>
+      <td style="padding:5px 8px;border-bottom:0.5px solid #ddd"><span style="background:${stageBg};color:${stageCol};padding:3px 14px;border-radius:3px;font-weight:700;font-size:13px">${stage}</span></td></tr>
+  <tr><td style="padding:5px 8px;border-bottom:0.5px solid #ddd">Ⅱ-A 合計評価点数（獲得率）</td><td style="padding:5px 8px;font-weight:700;border-bottom:0.5px solid #ddd">${total}</td></tr>
+  <tr><td style="padding:5px 8px;border-bottom:0.5px solid #ddd">Ⅰ 基本的自主管理（獲得率）</td><td style="padding:5px 8px;border-bottom:0.5px solid #ddd">${s1}</td></tr>
+  <tr><td style="padding:5px 8px;border-bottom:0.5px solid #ddd">ⅡA 施設面（獲得率）</td><td style="padding:5px 8px;border-bottom:0.5px solid #ddd">${s2a}</td></tr>
+  <tr><td style="padding:5px 8px;border-bottom:0.5px solid #ddd">ⅡA 管理運営面（獲得率）</td><td style="padding:5px 8px;border-bottom:0.5px solid #ddd">${s2b}</td></tr>
+  <tr><td style="padding:5px 8px;border-bottom:0.5px solid #ddd">ⅡA 作業手順書（獲得率）</td><td style="padding:5px 8px;border-bottom:0.5px solid #ddd">${sm}</td></tr>
+  <tr><td style="padding:5px 8px;border-bottom:0.5px solid #ddd">ⅡB HACCPの取組（獲得率）</td><td style="padding:5px 8px;border-bottom:0.5px solid #ddd">${s3}</td></tr>
+  <tr><td style="padding:5px 8px;font-size:9px;color:#555">段階内訳</td><td style="padding:5px 8px;font-size:9px;color:#555">${detail||'－'}</td></tr>
+</tbody></table>
+${oc?`<h2>総合コメント・特記事項</h2><div class="sbox">${oc.replace(/\n/g,'<br>').replace(/</g,'&lt;')}</div>`:''}
+<h2>Ⅰ 基本的な自主管理</h2>
+<table><thead><tr><th>チェック項目</th><th style="width:70px;text-align:center">点数</th></tr></thead><tbody>${rows(SEC1.items)}</tbody></table>
+<h2>ⅡA 一般衛生管理（施設面）</h2>
+<table><thead><tr><th>チェック項目</th><th style="width:70px;text-align:center">点数</th></tr></thead><tbody>${rows(SEC2A_ITEMS)}</tbody></table>
+<h2>ⅡA 一般衛生管理（管理運営面）</h2>
+<table><thead><tr><th>チェック項目</th><th style="width:70px;text-align:center">点数</th></tr></thead><tbody>${s2bRows}</tbody></table>
+<h2>ⅡA(3) 作業手順書・点検記録の実施状況</h2>
+<table><thead><tr><th>項目</th><th style="width:60px;text-align:center">手順書</th><th style="width:60px;text-align:center">記録</th><th style="width:60px;text-align:center">合計</th></tr></thead><tbody>
+${SEC_MANUAL_ITEMS.map(it=>{
+  const s=manualScores[it.id];
+  const mdisp=s.manual===null?'－':s.manual?'あり':'なし';
+  const rdisp=s.record===null?'－':s.record?'あり':'なし';
+  const mscore=s.manual===null?'－':s.manual?'5':'0';
+  const rscore=s.record===null?'－':s.record?'5':'0';
+  const total2=(s.manual!==null&&s.record!==null)?(s.manual?5:0)+(s.record?5:0)+'点':'－';
+  const cm=comments['m_'+it.id]||'';
+  return `<tr>
+    <td style="padding:4px 6px;font-size:10px;border-bottom:0.5px solid #ddd;vertical-align:top">
+      ${it.label}
+      ${cm?`<div style="font-size:9px;color:#555;margin-top:2px;padding:2px 6px;background:#f5f5f5;border-left:2px solid #bbb">${cm.replace(/</g,'&lt;')}</div>`:''}
+    </td>
+    <td style="text-align:center;padding:4px;font-size:11px;font-weight:700;border-bottom:0.5px solid #ddd;color:${s.manual?'#0a6040':'#555'}">${mdisp}</td>
+    <td style="text-align:center;padding:4px;font-size:11px;font-weight:700;border-bottom:0.5px solid #ddd;color:${s.record?'#0a6040':'#555'}">${rdisp}</td>
+    <td style="text-align:center;padding:4px;font-size:11px;font-weight:700;border-bottom:0.5px solid #ddd">${total2}</td>
+  </tr>`;
+}).join('')}
+</tbody></table>
+<h2>ⅡB HACCPに関する取り組み</h2>
+<table><thead><tr><th>チェック項目</th><th style="width:70px;text-align:center">点数</th></tr></thead><tbody>${rows(SEC3_ITEMS)}</tbody></table>
+</body></html>`;
+
+  const w = window.open('', '_blank');
+  w.document.write(html);
+  w.document.close();
+  w.onload = () => w.print();
+}
+
+buildSections();
+recalc();
+</script>
+</body>
+</html>
